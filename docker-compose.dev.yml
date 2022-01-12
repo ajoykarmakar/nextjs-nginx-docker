@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  nextjs:
+    ports:
+      - "3000:3000"
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./nextapp:/app
+      - nextjs-dev-node_modules:/app/node_modules
+      - nextjs-dev-next:/app/.next
+    restart: always
+
+  frontend:
+    build:
+      context: ./nginx
+      dockerfile: ./nginx/Dockerfile
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "3001:3001"
+    depends_on:
+      - nextjs
+    restart: always
+
+volumes:
+  nextjs-dev-node_modules:
+  nextjs-dev-next:
