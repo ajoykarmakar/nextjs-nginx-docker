@@ -1,8 +1,26 @@
-FROM node:14.5.0 as dev
-RUN mkdir /app
-WORKDIR /app
-COPY package*.json ./
-COPY yarn.lock ./
-RUN yarn
-EXPOSE 3000
-CMD ["yarn" , "dev"]
+FROM node:12
+
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# Installing dependencies
+COPY package*.json .
+COPY yarn.lock .
+RUN yarn install
+
+# Copying source files
+COPY . .
+
+ARG NEXT_PORT
+ENV NEXT_PORT=${NEXT_PORT}
+
+# Building app
+ENV PORT=${NEXT_PORT}
+RUN yarn build
+EXPOSE ${NEXT_PORT}
+
+
+
+# Running the app
+CMD ["yarn", "dev"]

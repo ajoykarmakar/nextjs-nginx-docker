@@ -4,12 +4,13 @@ services:
   nextjs:
     image: swadesh:${NEXT_APP_VERSION}
     ports:
-      - "3000:3000"
+      - ${PORT}:${PORT}
     build:
       context: ./
       dockerfile: Dockerfile
       target: prod
       args:
+        NEXT_PORT: ${PORT}
         NEXT_PUBLIC_GOOGLE_KEY: ${GOOGLE_KEY}
         NEXT_PUBLIC_APP_VERSION: ${NEXT_APP_VERSION}
     volumes:
